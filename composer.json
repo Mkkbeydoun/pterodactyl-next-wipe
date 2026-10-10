@@ -1,0 +1,11 @@
+{
+    "description": "Show a countdown to each server's next wipe on its console page, with an optional public page for Discord and websites.",
+    "autoload": {
+        "psr-4": {
+            "RustixDev\\NextWipe\\": "src/"
+        }
+    },
+    "config": {
+        "autoloader-suffix": "NextWipeExtension"
+    }
+}
