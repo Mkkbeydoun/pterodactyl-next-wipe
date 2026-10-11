@@ -24,13 +24,15 @@ Show a countdown to each server's next wipe on its console page, with an optiona
 
 ## Install
 
-From a release archive (`next-wipe-1.0.0.pteroext`):
+1. Download `next-wipe-<version>.pteroext` from the [latest release](https://github.com/Mkkbeydoun/pterodactyl-next-wipe/releases/latest).
+2. In the panel, open **Admin → Extensions**, upload the file and enable it.
+3. Reload the panel.
+
+From a terminal instead:
 
 ```sh
-php artisan p:extension:install /path/to/next-wipe-1.0.0.pteroext --enable
+php artisan p:extension:install /path/to/next-wipe-<version>.pteroext --enable
 ```
-
-Or upload the archive under **Admin → Extensions**. Reload the panel afterwards.
 
 ## Build from source
 
@@ -45,6 +47,14 @@ php artisan p:extension:pack /path/to/next-wipe
 
 ## Uninstall
 
+Remove it under **Admin → Extensions**, or from a terminal:
+
 ```sh
 php artisan p:extension:remove next-wipe
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
+This is a community extension and is not affiliated with or endorsed by Pterodactyl.
