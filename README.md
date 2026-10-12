@@ -24,7 +24,7 @@ Show a countdown to each server's next wipe on its console page, with an optiona
 
 ## Install
 
-1. Download `next-wipe-<version>.pteroext` from the [latest release](https://github.com/Mkkbeydoun/pterodactyl-next-wipe/releases/latest).
+1. Download `next-wipe-<version>.pteroext` from the [latest release](https://github.com/Rustix-Development/pterodactyl-next-wipe/releases/latest).
 2. In the panel, open **Admin → Extensions**, upload the file and enable it.
 3. Reload the panel.
 
