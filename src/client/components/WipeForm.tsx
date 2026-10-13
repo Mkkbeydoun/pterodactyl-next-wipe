@@ -1,25 +1,35 @@
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import { Button, CopyOnClick, Dialog, Input, Label, Select, Switch } from '@pterodactyl/sdk';
-import type { Repeat, Wipe, WipeInput } from '../api';
-import { fromLocalInput, REPEAT_LABELS, toLocalInput } from '../countdown';
+import type { Repeat, Schedule, WipeInput } from '../api';
+import { browserTimezone, REPEAT_LABELS, timezones } from '../countdown';
 
 interface Props {
-    initial: Wipe | null;
+    initial: Schedule | null;
+    isPublic: boolean;
+    publicUrl: string | null;
     pending: boolean;
     onCancel: () => void;
     onDelete: () => void;
     onSubmit: (input: WipeInput) => void;
 }
 
-export default function WipeForm({ initial, pending, onCancel, onDelete, onSubmit }: Props) {
+export default function WipeForm({ initial, isPublic: initialPublic, publicUrl, pending, onCancel, onDelete, onSubmit }: Props) {
     const [label, setLabel] = useState(initial?.label ?? 'Map wipe');
-    const [anchor, setAnchor] = useState(toLocalInput(initial?.next_at ?? initial?.anchor_at ?? null));
+    const [anchor, setAnchor] = useState(initial?.anchor_local ?? '');
+    // New schedules start in the browser's time zone.
+    const [timezone, setTimezone] = useState(initial?.timezone ?? browserTimezone());
     const [repeat, setRepeat] = useState<Repeat>(initial?.repeat ?? 'weekly');
-    const [isPublic, setPublic] = useState(initial?.public ?? false);
+    const [isPublic, setPublic] = useState(initialPublic);
+
+    const zones = useMemo(() => {
+        const list = timezones();
+
+        return (list.includes(timezone) ? list : [timezone, ...list]).map((zone) => ({ value: zone, label: zone }));
+    }, [timezone]);
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
-        onSubmit({ label: label.trim(), anchor_at: fromLocalInput(anchor), repeat, public: isPublic });
+        onSubmit({ label: label.trim(), anchor_local: anchor, timezone, repeat, public: isPublic });
     };
 
     return (
@@ -30,7 +40,7 @@ export default function WipeForm({ initial, pending, onCancel, onDelete, onSubmi
             </div>
             <div className='rxnw:grid rxnw:gap-4 rxnw:sm:grid-cols-2'>
                 <div>
-                    <Label htmlFor='rxnw-anchor'>Next wipe (your time)</Label>
+                    <Label htmlFor='rxnw-anchor'>Next wipe</Label>
                     <Input
                         id='rxnw-anchor'
                         type='datetime-local'
@@ -40,14 +50,18 @@ export default function WipeForm({ initial, pending, onCancel, onDelete, onSubmi
                     />
                 </div>
                 <div>
-                    <Label htmlFor='rxnw-repeat'>Repeats</Label>
-                    <Select
-                        id='rxnw-repeat'
-                        value={repeat}
-                        options={Object.entries(REPEAT_LABELS).map(([value, label]) => ({ value, label }))}
-                        onChange={(v) => setRepeat(v as Repeat)}
-                    />
+                    <Label htmlFor='rxnw-timezone'>Time zone</Label>
+                    <Select id='rxnw-timezone' value={timezone} options={zones} onChange={(v) => setTimezone(String(v))} />
                 </div>
+            </div>
+            <div>
+                <Label htmlFor='rxnw-repeat'>Repeats</Label>
+                <Select
+                    id='rxnw-repeat'
+                    value={repeat}
+                    options={Object.entries(REPEAT_LABELS).map(([value, label]) => ({ value, label }))}
+                    onChange={(v) => setRepeat(v as Repeat)}
+                />
             </div>
             <Switch
                 checked={isPublic}
@@ -55,10 +69,10 @@ export default function WipeForm({ initial, pending, onCancel, onDelete, onSubmi
                 label='Public page'
                 description='A link anyone can open, for Discord or your website. It shows the server name and wipe time only.'
             />
-            {isPublic && initial?.public_url && (
-                <CopyOnClick text={initial.public_url}>
+            {isPublic && publicUrl && (
+                <CopyOnClick text={publicUrl}>
                     <code className='rxnw:block rxnw:cursor-pointer rxnw:truncate rxnw:rounded rxnw:bg-background rxnw:px-3 rxnw:py-2 rxnw:text-xs'>
-                        {initial.public_url}
+                        {publicUrl}
                     </code>
                 </CopyOnClick>
             )}

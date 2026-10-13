@@ -2,7 +2,7 @@
     "$schema": "./node_modules/@pterodactyl/sdk/manifest.schema.json",
     "id": "next-wipe",
     "name": "Next Wipe",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Show a countdown to each server's next wipe on its console page, with an optional public page for Discord and websites.",
     "author": "RustixDev",
     "icon": "calendar-clock",

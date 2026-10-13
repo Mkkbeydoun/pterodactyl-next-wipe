@@ -13,17 +13,45 @@ export function countdown(target: string, now: number = Date.now()): string | nu
     return `${minutes}m ${seconds % 60}s`;
 }
 
-/** An ISO time as the value of a datetime-local input, in the viewer's time zone. */
-export function toLocalInput(iso: string | null): string {
-    if (!iso) return '';
-    const date = new Date(iso);
-    const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
-
-    return local.toISOString().slice(0, 16);
+export function browserTimezone(): string {
+    try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    } catch {
+        return 'UTC';
+    }
 }
 
-export function fromLocalInput(value: string): string {
-    return new Date(value).toISOString();
+export function timezones(): string[] {
+    try {
+        return Intl.supportedValuesOf('timeZone');
+    } catch {
+        return ['UTC'];
+    }
+}
+
+/** An exact time as a datetime-local value ("2026-10-15T19:00") on the wall clock of a time zone. */
+export function toZonedInput(iso: string | null, timeZone: string): string {
+    if (!iso) return '';
+    const parts = Object.fromEntries(
+        new Intl.DateTimeFormat('en-US', {
+            timeZone,
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        })
+            .formatToParts(new Date(iso))
+            .map((part) => [part.type, part.value])
+    );
+
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+}
+
+/** A date and time for people to read, in the viewer's zone unless one is given. */
+export function formatWhen(iso: string, timeZone?: string): string {
+    return new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone });
 }
 
 export const REPEAT_LABELS: Record<string, string> = {
@@ -33,3 +61,11 @@ export const REPEAT_LABELS: Record<string, string> = {
     monthly: 'Every month, same day',
     'first-thursday': 'First Thursday of each month',
 };
+
+/** Wipe & Season Manager plans can also repeat these ways. */
+const OTHER_REPEAT_LABELS: Record<string, string> = {
+    once: 'Once',
+    daily: 'Every day',
+};
+
+export const repeatLabel = (repeat: string): string => REPEAT_LABELS[repeat] ?? OTHER_REPEAT_LABELS[repeat] ?? repeat;

@@ -5,22 +5,29 @@ namespace RustixDev\NextWipe\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RustixDev\NextWipe\Models\WipeSchedule;
+use RustixDev\NextWipe\Support\UpcomingWipe;
 use Symfony\Component\HttpFoundation\Response;
 
-/** The opt-in public page, for Discord bots and websites. Shows the server name and wipe time only. */
+/**
+ * The opt-in public page, for Discord and websites. Shows the server name and wipe
+ * time only. When Wipe & Season Manager has a plan for the server, its next wipe is shown.
+ */
 class PublicWipeController
 {
     public function show(Request $request, string $token): Response
     {
         $schedule = WipeSchedule::query()->with('server:id,name')->where('public_token', $token)->where('public', true)->firstOrFail();
-        $next = $schedule->next();
+        $upcoming = UpcomingWipe::forServer($schedule->server_id, $schedule);
+        $next = $upcoming?->nextAt;
 
         $payload = [
             'server' => $schedule->server->name,
-            'label' => $schedule->label,
+            'label' => $upcoming->label ?? $schedule->label,
             'next_at' => $next?->toIso8601String(),
             'next_unix' => $next?->getTimestamp(),
-            'repeat' => $schedule->repeat,
+            'repeat' => $upcoming->repeat ?? $schedule->repeat,
+            'timezone' => $upcoming->timezone ?? 'UTC',
+            'next_local' => $upcoming?->localDescription(),
         ];
 
         $headers = ['Cache-Control' => 'public, max-age=60', 'Access-Control-Allow-Origin' => '*'];

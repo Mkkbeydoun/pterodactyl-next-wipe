@@ -15,6 +15,7 @@ class NextWipeProvider extends ExtensionProvider
         $this->loadExtensionViews();
 
         $this->registerPermissions('Next Wipe', [
+            // Subusers with Wipe & Season Manager's manage permission can change it too.
             'manage' => 'Set the server\'s wipe schedule and turn its public page on or off.',
         ]);
     }
