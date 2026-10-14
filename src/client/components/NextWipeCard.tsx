@@ -74,7 +74,7 @@ export default function NextWipeCard({ data: server }: { data: Server }) {
     return (
         <div className='rxnw:mt-0 rxnw:mb-3 rxnw:flex rxnw:flex-wrap rxnw:items-center rxnw:gap-x-3 rxnw:gap-y-2 rxnw:rounded-md rxnw:border rxnw:border-border rxnw:bg-card rxnw:px-4 rxnw:py-2 rxnw:text-card-foreground'>
             <CalendarClock size={16} aria-hidden='true' className='rxnw:shrink-0 rxnw:text-muted-foreground' />
-            <div className='rxnw:min-w-0 rxnw:flex-1'>
+            <div className='rxnw:min-w-0 rxnw:flex-1 rxnw:basis-56'>
                 {wipe ? (
                     <>
                         <p className='rxnw:truncate rxnw:text-sm rxnw:text-muted-foreground'>

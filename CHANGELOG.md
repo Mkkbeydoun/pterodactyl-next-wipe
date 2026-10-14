@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+- Works with Pterodactyl v2.0.0-beta.1 (SDK beta.6).
+- On phones the console card's buttons now wrap below the wipe time instead of squeezing it.
+
 ## 1.1.0
 
 - Works with Wipe & Season Manager. When that extension is installed and the server has an enabled plan, the countdown, the public page and its Discord link preview show that plan's next wipe, name and time zone, so they always match the Wipes tab. Skipping a wipe or changing a plan there updates them too. Without a plan, Next Wipe uses its own schedule as before.

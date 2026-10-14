@@ -10,6 +10,6 @@ Download `next-wipe-${VERSION}.pteroext` below, then upload it under **Admin →
 php artisan p:extension:install /path/to/next-wipe-${VERSION}.pteroext --enable
 ```
 
-Requires Pterodactyl Panel 2.0 (2.0-develop or later) and PHP 8.3+. See the README for features and settings.
+Requires Pterodactyl Panel v2.0.0-beta.1 or later and PHP 8.3+. See the README for features and settings.
 
 This is a community extension and is not affiliated with or endorsed by Pterodactyl.
