@@ -22,7 +22,7 @@ Show a countdown to each server's next wipe on its console page, with an optiona
 
 ## Requirements
 
-- Pterodactyl Panel 2.0 (2.0-develop or later)
+- Pterodactyl Panel v2.0.0-beta.1 or later
 - PHP 8.3+
 
 ## Install
